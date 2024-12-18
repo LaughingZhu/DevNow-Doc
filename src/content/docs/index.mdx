@@ -1,0 +1,54 @@
+---
+title: Welcome to DevNow
+description: 开始搭建你的 Blog 项目
+template: splash
+hero:
+  tagline: 一个简洁、开源的博客模版，开始定制你专属的 Blog !
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: 开始使用
+      link: /guides/example/
+      icon: right-arrow
+    - text: 在 GitHub 上查看
+      link: https://github.com/LaughingZhu/DevNow
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import AboutAstro from '~/components/about-astro.astro';
+
+## Features
+
+<CardGrid stagger>
+	<Card title="对搜索引擎友好的博客模版" icon="open-book">
+		包括：网站导航、搜索、SEO、Sitemap、Rss 等支持。
+	</Card>
+	<Card title="Markdown、MDX" icon="document">
+		支持 `.md` 和 `.mdx` 文件、代码高亮等功能。推荐优先使用 `.mdx` ，在功能支持度和灵活度上更好。
+	</Card>
+	<Card title="Headless CMS" icon="puzzle">
+		支持 Headless CMS ，可以通过 CMS 进行在线编辑文档等功能，目前支持 [Tina CMS](https://tina.io/)。
+		后续会优先支持 [Notion](https://www.notion.com/)。
+	</Card>
+	<Card title="Beautiful UI" icon="rocket">
+		主要使用 [Tailwind CSS](https://tailwindcss.com/) 和 [Shadcn/ui](https://ui.shadcn.com/) 来构建整个项目，UI 整体来说比较简洁、清新。
+	</Card>
+	<Card title="Deploy" icon="rocket">
+		支持 `Vercel` 一键快捷部署，接下来会陆续支持 `Cloudflare Pages` 、 `Netlify `等部署方式。
+	</Card>
+	<Card title="由 Astro 提供支持" icon="rocket">
+		充分利用 Astro 的全部功能和性能。使用你最喜欢的 Astro 集成和库扩展
+		DevNow (可以自由扩展，如果有好的提议，也可以在 Issue 上提)。
+	</Card>
+
+</CardGrid>
+
+<AboutAstro title="由以下提供支持">
+Astro 是专为速度而设计的全能 Web 框架。
+从任何地方获取你的内容并在任何地方部署，所有这些都由你喜欢的 UI 组件和库提供支持。
+
+[了解 Astro](https://astro.build/)
+
+</AboutAstro>
