@@ -1,0 +1,65 @@
+---
+title: 文章内容配置
+description: 文章内容配置
+---
+
+文章相关的配置集中在 `src/content` 目录下，如默认数据结构、加载器等，一般情况下不需要修改。
+
+
+### src/content/config.ts 
+
+- 用来配置一些默认的参数和数据结构，如果需要自定义参数，可以在 `SCHEMA` 中添加字段。类型基于 [zod](https://zod.dev/) 进行定义，更多用法请参考官方文档。
+- loader Astro v5 默认的文章加载器，默认是匹配 `src/content/docs/` 下所有的 `.md` 、 `.mdx` 文件。
+
+```ts title='content/config.ts'
+import { glob } from 'astro/loaders';
+import { defineCollection, z } from 'astro:content';
+const SCHEMA = z.object({
+  title: z.string(),
+  desc: z.string(),
+  // 是否是草稿，草稿默认不会展示
+  draft: z.boolean().optional(),
+  // 分类
+  category: z.string().trim(),
+  // 作者
+  author: z.string().trim(),
+  // 标签
+  tags: z.array(z.string()),
+  // 封面图
+  image: z.string().optional(),
+  // 发布时间
+  publishDate: z.string().transform((str) => new Date(str)),
+  // 是否置顶
+  pin: z.boolean().optional()
+});
+
+const Docs = defineCollection({
+  // add glob loader : https://github.com/withastro/astro/pull/11398
+  loader: glob({
+    pattern: ['**/[^_]*.md', '**/[^_]*.mdx'],
+    base: './src/content/doc',
+    generateId: ({ entry, data }) => {
+      if (data.slug) {
+        return data.slug as string;
+      }
+      return entry.replace(/\.[^/.]+$/, '');
+    }
+  }),
+  schema: SCHEMA
+});
+
+export const collections = {
+  doc: Docs
+};
+
+/** 文档类型 */
+export type DOC_TYPE = z.infer<typeof SCHEMA>;
+
+```
+
+
+### src/content/docs
+
+文章默认会从 `src/content/docs/` 中加载，可以在此目录下创建 `.md` 或 `.mdx` 文件来添加新的文章。
+
+新文件可以在这里进行编辑，推荐大家优先使用 `.mdx` 来写文章，扩展性和灵活度更高，同时支持代码高亮等功能。
