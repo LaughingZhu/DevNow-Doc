@@ -2,6 +2,9 @@
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 
+const ogUrl = 'https://r2.laughingzhu.cn/ec2bc53c8ee470916b97ae4a080a9e71-f90d65.webp'
+const ogImageAlt = 'DevNow Doc OG Image';
+
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
@@ -14,6 +17,26 @@ export default defineConfig({
 			social: {
 				github: 'https://github.com/LaughingZhu/DevNow',
 			},
+			head: [
+				{
+					tag: 'script',
+					attrs: {
+						src: 'https://cdn.usefathom.com/script.js',
+						'data-site': 'EZBHTSIG',
+						defer: true,
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: { property: 'og:image', content: ogUrl },
+				},
+				{
+					tag: 'meta',
+					attrs: { property: 'og:image:alt', content: ogImageAlt },
+				},
+			],
+
+			favicon: '/public/favicon.svg',
 			sidebar: [
 				{
 					label: '简介',
