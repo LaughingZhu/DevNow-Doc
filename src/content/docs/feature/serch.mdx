@@ -3,6 +3,18 @@ title: 内容搜索
 description: 内容搜索
 ---
 
+
+### 开关配置：
+
+```ts title="src/config/index.ts"
+export default {
+  ...
+  // 默认开启
+  search: true,
+};
+
+```
+
 目前是基于开源框架 [lunr](https://github.com/olivernn/lunr.js) 实现的搜索，在运行时会动态进行分词，生成索引信息:
 
 - search-docs.json
