@@ -14,7 +14,8 @@ export default defineConfig({
         },
 			title: 'DevNow Docs',
         social: {
-            github: 'https://github.com/LaughingZhu/DevNow',
+					github: 'https://github.com/LaughingZhu/DevNow',
+					telegram: 'https://t.me/devnow_tech',
         },
         components: {
 					// 重写默认的 `SocialIcons` 组件。
