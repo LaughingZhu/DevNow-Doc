@@ -57,7 +57,11 @@ export default defineConfig({
 				},
 				{
 					label: '部署',
-					autogenerate: { directory: 'deploy',collapsed: true },
+					items: [
+						{ label: '必看', slug: 'deploy' },
+						{ label: 'Vercel 部署', slug: 'deploy/vercel' },
+						{ label: 'CloudFlare 部署', slug: 'deploy/cloudflare' },
+					],
 				},
 				{
 					label: '扩展',
