@@ -3,8 +3,212 @@ title: 内容扩展
 description: 支持多种内容扩展
 ---
 
+### 一、Tina CMS
+
+
+想了很久是否要集成一个类似 CMS 的管理平台来管理这些文章的内容，终于在这周开始落地了。简单说一下我为什么有这个想法的：由于 [DevNow](https://github.com/LaughingZhu/DevNow) 的定位📌是一个开源的博客项目，所以我在努力的跳出我自己的想法，避免因为一些自己想要的一些功能来让 DevNow 看起来更加的臃肿。集成 `Headless CMS` 的主要目的是优化现在的工作流和扩展文章内容的丰富度。
+
+![CMS平台功能对比](https://r2.laughingzhu.cn/985add0258a0673591e07acc23241e26-d73f58.png)
+
+#### 具体的集成步骤如下
+
+##### [1. 在项目中集成 Tina](https://tina.io/docs/frameworks/astro/)
+
+目前项目中已经集成，需要手动改几个配置。具体如下：
+
+###### 1. 更改运行脚本
+
+```js
+// 在 package.json 中修改 scripts 的 dev 和 build 即可
+"scripts": {
+  "dev": "tinacms dev -c \"astro dev\"",
+  "build": "tinacms build && astro check && astro build",
+}
+```
+
+###### 2. 自定义文章结构
+根据项目替换 schema ，集体可参考 [schema 配置](https://tina.io/docs/schema/)
+
+```js
+schema: {
+  collections: [
+    {
+      name: 'doc',
+      label: 'Posts',
+      path: 'src/content/doc',
+      format: 'mdx',
+      fields: [
+        {
+          type: 'string',
+          name: 'desc',
+          label: 'Desc',
+          required: true,
+          description: 'The image used for the cover of the post'
+        },
+        {
+          type: 'boolean',
+          name: 'draft',
+          label: 'Draft',
+          description: 'If this is checked the post will not be published'
+        },
+
+        {
+          type: 'string',
+          required: true,
+          name: 'category',
+          label: 'Category',
+          description: 'Select an category for this post',
+          options: [
+            ...categories.map((item) => {
+              return {
+                label: item.title,
+                value: item.slug
+              };
+            })
+          ]
+        },
+        // 作者
+        {
+          type: 'string',
+          name: 'author',
+          label: 'Author',
+          required: true
+        },
+        // 标签
+        {
+          type: 'string',
+          name: 'tags',
+          label: 'Tags',
+          required: true,
+          list: true,
+          ui: {
+            component: 'tags'
+          }
+        },
+        {
+          type: 'string',
+          name: 'image',
+          label: 'Image',
+          required: true
+        },
+        // 封面图
+        // 发布时间
+        {
+          type: 'string',
+          name: 'publishDate',
+          label: 'PublishDate',
+          required: true
+        },
+        // 是否置顶
+        {
+          type: 'boolean',
+          name: 'pin',
+          label: 'Pin',
+          required: true
+        },
+        {
+          type: 'string',
+          name: 'title',
+          label: 'Title',
+          isTitle: true,
+          required: true
+        },
+        {
+          type: 'rich-text',
+          name: 'body',
+          label: 'Body',
+          isBody: true
+        }
+      ]
+    }
+  ];
+}
+```
+
+:::tip[注意]
+
+这里需要主要的是在首次运行的时候，会根据 `tina/config.ts` 生成一个 `tina/tina-lock.json` 的文件，每次修改完都 `config.ts` 的时候，都需要在本地运行一下来更新 `tina-lock.json` 的内容，否则无法成功 `build` 。
+
+:::
+
+运行项目：
+
+```js
+pnpm dev
+```
+
+然后访问：
+
+![tina 成功集成](https://r2.laughingzhu.cn/e28b3684bd31b393d719f01067412df4-c39875.png)
+
+看到这样的界面，恭喜你，成功完成了配置 \[庆祝]\[庆祝]
+接下来就可以在这里去更新文章的内容了
+
+![更新文章](https://r2.laughingzhu.cn/0a325b503459121c17de1e24ed6ee9f5-4fda95.png)
+
+##### 2. 线上环境集成
+
+通过以上的一些配置，我们已经完成了 `local` 的配置，接下来我们需要配置一下线上环境，我们可能主要的场景是在线上环境直接进行文件的更新。
+[Tina](https://tina.io/docs/tina-cloud/) 在这里提供了两套解决方案:
+
+1. [Tina Cloud](https://tina.io/docs/tina-cloud/overview/)
+2. [使用自托管后端](https://tina.io/docs/self-hosted/overview/)
+
+这里我选择了 `Tina Cloud` ，具体的思考一个是自托管的配置成本比较高，需要自己的配置实现：
+
+1. [Auth Provider](https://tina.io/docs/reference/self-hosted/auth-provider/overview)：处理 CMS 操作的身份验证和授权。提供由数据库中的用户集合支持的默认Auth.js实现。
+2. [Database Adapter](https://tina.io/docs/reference/self-hosted/database-adapter/overview)：处理索引和与数据库的交互（例如MongoDB，Postgres等）
+3. [Git Provider](https://tina.io/docs/reference/self-hosted/git-provider/overview)：处理将内容保存到 `Git`
+
+每个模块都是独立的，这意味着您可以选择用不同的实现替换任何模块，或者开发定制解决方案来满足您的特定需求。
+
+当然自托管也是有一些 [限制](https://tina.io/docs/tina-cloud/faq/#features-unavailable-in-self-hosted-tina-compared-to-tina-cloud) 的，不过限制部分对我来说不是最主要的问题，是上边三个配置的实现成本。还有就是作为一个博客项目，稳定的存储都在 `Git` 上，所以 `Tina Cloud` 对我来说是一个更好且简单的实现。
+
+###### 2.1 注册 [Tina Cloud 账号](https://app.tina.io/)
+
+![注册 tina cloud](https://r2.laughingzhu.cn/c33e15146075697d24a48417fbc497f4-8d5d72.png)
+
+###### 2.2 创建项目
+
+![创建项目](https://r2.laughingzhu.cn/c96665d56b19ddb78fa9d6e2bf69aff0-550fa5.png)
+
+Tina 提供了两种方式，我们选择第一个，选择导入一个已有的项目开始。根据提示的步骤一步一步来就好，
+
+![创建项目2](https://r2.laughingzhu.cn/79f23a2158ed074b4ff53b745eb7784e-1b1341.png)
+
+不出意外的话你会看到这样的一个界面。
+
+![创建项目3](https://r2.laughingzhu.cn/2b8fd947f3f231fd06bbea05bc990152-bd5f7f.png)
+
+###### 2.3 [配置环境变量](https://tina.io/docs/tina-cloud/deployment-options/vercel/)
+
+这里我是通过 `Vercel` 构建项目的，直接在上边配置环境变量就好了，具体如下：
+
+![配置环境变量](https://r2.laughingzhu.cn/df38d9d935e23f54351e28b245143c39-573988.png)
+
+> 需要注意的是，如果环境变量名改变的话，记得在项目配置在修改对应的值，具体实在 `tina/cinfig.ts` 中：
+
+![修改项目环境变量名](https://r2.laughingzhu.cn/3aa97ebefed4f675ce23746299383e95-e90698.png)
+
+###### 2.4 把我们集成好的项目分支推到 Git 上进行构建
+
+如果是首次集成的话需要把我们上一步配置的 `PUBLIC_GITHUB_BRANCH` 这个分支名改成当先对应的分支名，否则 `Tian Cloud` 无法检测到对应分支，会导致构建失败，等成功推到 `mian` 主分支的时候，再将 `PUBLIC_GITHUB_BRANCH` 改回主分支名。
+
+然后回到 Tina Cloud 刷新即可看到：
+
+![配置完成](https://r2.laughingzhu.cn/6582f25f28d9023feffcb7613e48b77b-21e7aa.png)
+
+到这里我们就成功在 [DevNow](https://github.com/LaughingZhu/DevNow) 中集成了 Tina ，后续可以直接通过线上环境访问即可进行文件更新。直接访问我们配置好的域名 `https://www.laughingzhu.cn/admin` 即可。
+
+也欢迎大家体验开源博客项目 [DevNow](https://github.com/LaughingZhu/DevNow) ，可以提一些反馈建议，当然也可以顺手点个赞👍🏻
+
+
+##### 详情可参考： 
+
+[DevNow：支持集成 Tina CMS](https://www.laughingzhu.cn/posts/tina-cms)
+
+### 二、Notion
+
 待完善
 
-### Notion
-
-### Tina CMS
+### 三、其他平台待接入
