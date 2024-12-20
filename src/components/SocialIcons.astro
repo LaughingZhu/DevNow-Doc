@@ -1,0 +1,27 @@
+---
+import Default from '@astrojs/starlight/components/SocialIcons.astro';
+import type { Props } from '@astrojs/starlight/props';
+---
+
+
+<a target="_blank" href="https://www.laughingzhu.cn" rel="me" class="sl-flex text-black dark:text-white no-underline hover:underline" > 
+  <span class="sl-flex">演示网站</span>
+</a>
+
+<Default {...Astro.props}><slot /></Default>
+
+<style>
+	a {
+		gap: 0.5rem;
+		align-items: center;
+		text-decoration: none;
+		color: var(--sl-color-gray-3);
+    font-size: 14px;
+    font-weight: 500;
+	}
+	a:hover {
+		color: var(--sl-color-white);
+	}
+</style>
+
+
