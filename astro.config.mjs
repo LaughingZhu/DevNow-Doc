@@ -17,6 +17,7 @@ export default defineConfig({
 			social: {
 				github: 'https://github.com/LaughingZhu/DevNow',
 			},
+			
 			head: [
 				{
 					tag: 'script',
@@ -56,11 +57,11 @@ export default defineConfig({
 				},
 				{
 					label: '部署',
-					autogenerate: { directory: 'deploy' },
+					autogenerate: { directory: 'deploy',collapsed: true },
 				},
 				{
 					label: '扩展',
-					autogenerate: { directory: 'extend' },
+					autogenerate: { directory: 'extend', collapsed: true },
 				}
 			],
 		}),
