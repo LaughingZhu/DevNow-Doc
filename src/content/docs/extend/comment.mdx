@@ -3,7 +3,54 @@ title: 评论扩展
 description: 评论扩展
 ---
 
-待完善
+目前 DevNow 项目默认的评论是基于 [giscus](https://giscus.app/zh-CN) 实现的。
 
-### Waline
+但是个人觉得这个评论体验不是很好，所以目前 [演示网站](https://www.laughingzhu.cn) 已经把评论换成了 [Waline](https://waline.js.org/)。
 
+
+### 一、[Waline](https://waline.js.org/)
+
+- 轻量级、易部署
+- 支持 Markdown 语法、emoji 表情、数学公式
+- 匿名评论
+- 流浪量统计
+- WebHook 推送
+
+#### 1.1 部署数据库、后端服务相关配置
+根据 Waline 部署相关的后端服务，主要是 `LeanCloud` 设置 (数据库)，可以通过 `Vercel` 一键部署，详情可参看 [快速上手](https://waline.js.org/guide/get-started/#vercel-%E9%83%A8%E7%BD%B2-%E6%9C%8D%E5%8A%A1%E7%AB%AF)
+
+
+Vercel 部署成功后，可以解析一个自定义域名，这样更容易记忆。然后更新评论组件中的 `serverURL` 即可。
+
+#### 1.2 重构评论组件
+```astro title="src/components/Comments.astro"
+<link rel='stylesheet' href='https://unpkg.com/@waline/client@v3/dist/waline.css' />
+<!-- Meta 图标 (可选) -->
+<link rel='stylesheet' href='https://unpkg.com/@waline/client@v3/dist/waline-meta.css' />
+<div id='waline' class='waline'></div>
+<style>
+  [data-waline] img {
+    margin: 0;
+  }
+</style>
+
+<script type='module' is:inline>
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+  init({
+    el: '#waline',
+    {/* 后端服务 */}
+    serverURL: 'custom domain',
+    {/* 主题 */}
+    dark: 'html.dark',
+    {/* 语言 */}
+    lang: 'zh-CN',
+    // 浏览量
+    pageview: true,
+    // 评论数
+    comment: true,
+    reaction: true,
+    copyright: false
+  });
+</script>
+
+```
