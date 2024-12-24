@@ -312,7 +312,7 @@ export const collections = {
 
 > 相关文件已经在 DevNow 中添加，如果需要计入 Notion 数据源，同上把注释打开即可。
 
-```ts title="src/utils/content.ts" ins={1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,29}
+```ts title="src/utils/content.ts" ins={1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,29}
 // import { richTextToPlainText } from 'notion-astro-loader';
 // import { formatDate } from './utils';
 
@@ -327,13 +327,12 @@ export const collections = {
 //       author: richTextToPlainText(item.data.properties.author.rich_text),
 //       tags: item.data.properties.tags.rich_text[0].plain_text.split(','),
 //       image: item.data.properties.image.url,
-//       publishDate: formatDate(item.data.properties.publishDate.created_time),
+//       publishDate: item.data.properties.publishDate.created_time,
 //       pin: false
 //     },
 //     rendered: item.rendered,
 //     filePath: item.id,
 //     collection: item.collection,
-//     name: richTextToPlainText(item.data.properties.title.rich_text)
 //   };
 // });
 
