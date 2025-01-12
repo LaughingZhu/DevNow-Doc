@@ -1,0 +1,20 @@
+---
+title: 多端适配
+description: 适配移动、PC 端
+---
+
+提供多端适配能力，目前已经支持 PC 端和移动端，在多个场景下都有较好的用户体验。
+
+![多端适配](https://r2.laughingzhu.cn/3bcbae51ddcea2cdf738a11c2556a5cd-48f5c9.webp)
+
+列表页默认展示最多三列数据，会根据屏幕大小动态变化，如需自定义列数，可以在配置文件中修改。
+
+```ts title='src/config/index.ts'
+
+export default {
+  ...
+  /** 首页默认列数 */
+  default_column: 3,
+};
+
+```

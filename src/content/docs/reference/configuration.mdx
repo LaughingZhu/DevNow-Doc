@@ -1,0 +1,162 @@
+---
+title: 基础信息配置
+description: 项目基础信息配置
+---
+
+项目的一些基础信息配置，包含博客的一些 **基础信息** 和 **SEO相关** 设置等。
+
+
+import { FileTree } from '@astrojs/starlight/components';
+
+<FileTree>
+- public/
+- src/
+  - content/
+    - docs/
+      - hello-world.md
+    - config.ts
+  - config/
+    - index.ts
+  - data/
+    - category.ts
+    - nav.ts
+</FileTree>
+
+
+### 1.public
+
+`public/` 使用来放置静态文件，例如图片、favicon、logo等，一般情况下不需要修改。
+
+
+### 2.src/content
+
+文章相关的配置，如默认数据结构、加载器等，一般情况下不需要修改。
+
+详情请看 [文档详情](/reference/doc)
+
+### 3.src/data
+
+#### category.ts
+
+配置文章的分类信息，可以在此文件中添加分类信息，然后在文章中使用 `category` 作为标签来标记文章的分类。默认支持4个分类，可以随意自定义，注意同步颜色和slug。
+
+```ts title='category.ts'
+
+import type { Category } from '@type/category';
+
+export const categories: Category[] = [
+  {
+    title: 'Technology',
+    slug: 'technology',
+    color: 'blue',
+    description:
+      'Keep up with the latest tech trends and learn about the latest innovations in software development, hardware design, cybersecurity, and more.'
+  },
+  {
+    title: 'Book',
+    slug: 'book',
+    color: 'green',
+    description: 'Something about Books'
+  },
+  {
+    title: 'Blog',
+    slug: 'blog',
+    color: 'purple',
+    description: 'Something about Blog posts'
+  },
+  {
+    title: 'DevNow',
+    slug: 'devnow',
+    color: 'orange',
+    description: 'Something about DevNow platform.'
+  }
+];
+
+```
+
+#### nav.ts
+
+```ts title='nav.ts'
+export const LEFT_MENU: Menu[] = [
+  {
+    label: 'About',
+    href: '/about'
+  },
+  {
+    label: 'Category',
+    href: '/category',
+    isMobileHide: true,
+    children: category
+  }
+];
+export const RIGHT_MENU: Menu[] = [
+  {
+    label: 'Sponsor',
+    href: '/sponsor'
+  },
+  {
+    label: 'Github',
+    href: 'https://github.com/LaughingZhu/DevNow',
+    external: true
+  }
+];
+export const MOBILE_MENU: Menu[] = [...LEFT_MENU, ...RIGHT_MENU].filter(
+  (item) => !item.isMobileHide
+);
+
+```
+
+参数说明:
+
+- isMobileHide: 是否在移动端隐藏
+- children: 子菜单
+- external: 是否新窗口打开
+- label: 名称
+- href: 跳转链接
+
+
+
+### 4.src/config
+
+项目基础信息配置
+
+```ts title='config/index.ts'
+
+export default {
+  /** 网站配置信息 start */
+  // 网站名字
+  title: 'DevNow',
+  // 作者
+  author: 'LaughingZhu',
+  // 网站描述
+  description: 'DevNow — 开发技术周刊',
+  // 网站关键词
+  keywords: 'DevNow 开源技术博客项目。目前承载着一个技术新闻、开发weekly，每周一上午发布~',
+  // 网站图标
+  logo: 'https://r2.laughingzhu.cn/40850814d71699ef09fda435802bfe02-58f0d8.png',
+  homePage: 'https://www.laughingzhu.cn',
+  githubId: 'LaughingZhu',
+  // 仓库
+  repo: 'LaughingZhu/DevNow',
+  // ico
+  ico: 'https://r2.laughingzhu.cn/2191381389b808c9183a74c11f1280d6-c01e93.ico',
+  /** 网站配置信息  end */
+  cdn: 'https://cdn.laughingzhu.cn/',
+  // 评论开关
+  giscus: true,
+  // 搜索开关
+  search: true,
+  // 默认一页显示的文章数量
+  pageSize: 18,
+  /** 首页默认列数 */
+  default_column: 3,
+  /** 是否显示版权声明，默认不显示 */
+  show_copyright_info: false,
+  /** 域名备案信息开关, 为 '' 空则不显示 */
+  foot_site_info: '',
+};
+
+```
+
+
+以上就是 DevNow 项目中的一些关键配置，如果有撒问题，欢迎 [Issue](https://github.com/LaughingZhu/DevNow/issues) 我 :)
