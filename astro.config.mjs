@@ -1,16 +1,18 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://doc.laughingzhu.cn/',
 	integrations: [
 		starlight({
 			logo: {
-				src: './public/logo.webp',
+				src: './public/logo.png',
 				alt: 'DevNow Logo',
 			},
 			title: 'DevNow Docs',
+			favicon: './public/logo.png',
 			social: {
 				github: 'https://github.com/LaughingZhu/DevNow',
 			},
